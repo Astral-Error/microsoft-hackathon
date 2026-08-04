@@ -2,14 +2,14 @@
 import { initialData } from './data.js';
 
 // Initialize DB
-if (!localStorage.getItem('lib_db')) {
-    localStorage.setItem('lib_db', JSON.stringify(initialData));
+if (!localStorage.getItem('lib_db_v2')) {
+    localStorage.setItem('lib_db_v2', JSON.stringify(initialData));
 }
 
-const db = JSON.parse(localStorage.getItem('lib_db'));
+const db = JSON.parse(localStorage.getItem('lib_db_v2'));
 
 function saveDb() {
-    localStorage.setItem('lib_db', JSON.stringify(db));
+    localStorage.setItem('lib_db_v2', JSON.stringify(db));
 }
 
 export const api = {

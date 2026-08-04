@@ -15,6 +15,6 @@ export const initialData = {
     ],
     reservations: [
         // Seed some pending requests for the queue
-        { id: 'r1', memberId: 'm1', bookId: 'b1', copyId: null, startDate: '2026-08-05', returnDate: '2026-08-10', status: 'SUBMITTED', rejectionReason: null }
+        { id: 'r1', memberId: 'm1', bookId: 'b1', copyId: 'b1-c1', startDate: '2026-08-05', returnDate: '2026-08-10', status: 'ISSUED', rejectionReason: null }
     ]
 };
