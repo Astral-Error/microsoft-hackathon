@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Library Management System</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<div class="shell" th:with="dashboard=${dashboard}">
+  <section class="hero">
+    <div class="hero-panel">
+      <div class="eyebrow">VIT Hackathon Prototype</div>
+      <h1>Library Management System</h1>
+      <p>
+        A working prototype for request review, reservation control, issue tracking, and book returns with explicit
+        copy-level availability checks.
+      </p>
+      <div class="pill-row">
+        <span class="pill">Today: <strong th:text="${dashboard.today}"></strong></span>
+        <span class="pill">Submitted requests must pass review first</span>
+        <span class="pill">Copy conflicts are blocked up front</span>
+      </div>
+    </div>
+    <div class="hero-side">
+      <div class="metric-grid">
+        <div class="metric">
+          <strong th:text="${dashboard.stats.titleCount}">0</strong>
+          <span>Titles</span>
+        </div>
+        <div class="metric">
+          <strong th:text="${dashboard.stats.copyCount}">0</strong>
+          <span>Copies</span>
+        </div>
+        <div class="metric">
+          <strong th:text="${dashboard.stats.openRequests}">0</strong>
+          <span>Open requests</span>
+        </div>
+        <div class="metric">
+          <strong th:text="${dashboard.stats.loans}">0</strong>
+          <span>Issued loans</span>
+        </div>
+      </div>
+      <div class="metric-grid">
+        <div class="metric">
+          <strong th:text="${dashboard.stats.reservations}">0</strong>
+          <span>Confirmed reservations</span>
+        </div>
+        <div class="metric">
+          <strong th:text="${dashboard.stats.unavailableCopies}">0</strong>
+          <span>Unavailable copies</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div th:if="${successMessage}" class="message success" th:text="${successMessage}"></div>
+  <div th:if="${errorMessage}" class="message error" th:text="${errorMessage}"></div>
+
+  <section class="grid">
+    <div class="surface">
+      <h2>Create Borrowing Request</h2>
+      <p class="muted">Requests are validated against copy availability before they are accepted.</p>
+      <form th:action="@{/requests}" th:object="${requestForm}" method="post">
+        <div class="two-col">
+          <label>
+            Member ID
+            <input type="text" th:field="*{memberId}" placeholder="STU-1024" required />
+          </label>
+          <label>
+            Member Name
+            <input type="text" th:field="*{memberName}" placeholder="Asha Kumar" required />
+          </label>
+        </div>
+        <label>
+          Book Title
+          <select th:field="*{bookTitleId}" required>
+            <option value="" disabled selected>Select a title</option>
+            <option th:each="titleView : ${dashboard.titles}" th:value="${titleView.title.id}"
+                    th:text="${titleView.title.title + ' - ' + titleView.title.category + ' (' + titleView.availableNow + '/' + titleView.title.totalCopies + ' available now)'}"></option>
+          </select>
+        </label>
+        <div class="two-col">
+          <label>
+            Start Date
+            <input type="date" th:field="*{startDate}" required />
+          </label>
+          <label>
+            Expected Return Date
+            <input type="date" th:field="*{expectedReturnDate}" required />
+          </label>
+        </div>
+        <label>
+          Reason / Context
+          <textarea th:field="*{reason}" placeholder="Coursework, placement prep, research, etc."></textarea>
+        </label>
+        <button type="submit">Submit Request</button>
+      </form>
+    </div>
+
+    <div class="surface">
+      <h2>Title Availability</h2>
+      <div class="title-list">
+        <div class="card" th:each="titleView : ${dashboard.titles}">
+          <div class="card-head">
+            <div>
+              <h3 th:text="${titleView.title.title}">Title</h3>
+              <div class="muted" th:text="${titleView.title.category}">Category</div>
+            </div>
+            <span class="tag" th:text="${titleView.availableNow + ' / ' + titleView.title.totalCopies + ' available now'}">0 / 0</span>
+          </div>
+          <div class="divider"></div>
+          <div class="copy-row" th:each="copy : ${titleView.copies}">
+            <span class="tag" th:text="${copy.copyCode}">COPY</span>
+            <span class="small" th:text="${copy.condition}">AVAILABLE</span>
+            <span class="small muted" th:text="${copy.activity}">Activity</span>
+            <span class="small danger" th:if="${copy.conditionNote}" th:text="${copy.conditionNote}"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="surface" style="margin-top:20px;">
+    <h2>Borrowing Requests</h2>
+    <p class="muted">Review, issue, cancel, or close requests from a single dashboard.</p>
+    <div class="request-list">
+      <div class="card" th:each="request : ${dashboard.requests}">
+        <div class="card-head">
+          <div>
+            <h3 th:text="${'#' + request.id + ' ' + request.title}">Request</h3>
+            <div class="muted" th:text="${request.memberName + ' (' + request.memberId + ')'}">Member</div>
+          </div>
+          <span class="tag" th:text="${request.status}">STATUS</span>
+        </div>
+        <div class="divider"></div>
+        <div class="status-row small">
+          <span><strong>Copy:</strong> <span th:text="${request.copyCode}">Copy</span></span>
+          <span><strong>Period:</strong> <span th:text="${request.startDate + ' to ' + request.expectedReturnDate}">Period</span></span>
+          <span><strong>Reason:</strong> <span th:text="${request.reason}">Reason</span></span>
+        </div>
+        <div class="small muted" th:if="${request.reviewNote}" th:text="${request.reviewNote}"></div>
+        <div class="divider"></div>
+        <div class="request-actions">
+          <form th:if="${request.canApprove}" th:action="@{/requests/{id}/approve(id=${request.id})}" method="post">
+            <button type="submit">Approve</button>
+          </form>
+          <form th:if="${request.canReject}" th:action="@{/requests/{id}/reject(id=${request.id})}" method="post">
+            <button type="submit" class="danger">Reject</button>
+          </form>
+          <form th:if="${request.canIssue}" th:action="@{/requests/{id}/issue(id=${request.id})}" method="post">
+            <button type="submit" class="secondary">Issue</button>
+          </form>
+          <form th:if="${request.canCancel}" th:action="@{/requests/{id}/cancel(id=${request.id})}" method="post">
+            <button type="submit" class="danger">Cancel Reservation</button>
+          </form>
+          <form th:if="${request.canReturn}" th:action="@{/requests/{id}/return(id=${request.id})}" method="post">
+            <button type="submit">Return</button>
+          </form>
+          <form th:if="${request.canReturnUnavailable}" th:action="@{/requests/{id}/return-unavailable(id=${request.id})}" method="post">
+            <button type="submit" class="danger">Return + Mark Unavailable</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+</body>
+</html>
