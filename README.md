@@ -67,6 +67,9 @@ Excluded:
 - authentication
 - role-based permissions
 - notifications
+
+Excluded:
+
 - external database persistence
 - pagination
 - alternative-book recommendations
