@@ -29,7 +29,12 @@ export const api = {
     },
 
     getCurrentUser: () => {
-        return JSON.parse(localStorage.getItem('user'));
+        let user = JSON.parse(localStorage.getItem('user'));
+        if (!user) {
+            user = { id: 'l1', username: 'librarian', role: 'LIBRARIAN', name: 'Admin' };
+            localStorage.setItem('user', JSON.stringify(user));
+        }
+        return user;
     },
 
     getReservations: async () => {
