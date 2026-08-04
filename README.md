@@ -56,12 +56,12 @@ Implemented:
 - return
 - seeded data for the prompt
 - dashboard metrics and copy status cards
-
-Excluded:
-
 - authentication
 - role-based permissions
 - notifications
+
+Excluded:
+
 - external database persistence
 - pagination
 - alternative-book recommendations
