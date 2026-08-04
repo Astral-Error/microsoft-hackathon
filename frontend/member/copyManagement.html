@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copy Management - Libraria</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="wrapper">
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3 class="text-primary fw-bold m-0">Libraria</h3>
+            </div>
+            <ul class="list-unstyled components">
+                <li>
+                    <a href="adminDashboard.html">Dashboard</a>
+                </li>
+                <li>
+                    <a href="reviewQueue.html">Review Queue</a>
+                </li>
+                <li class="active">
+                    <a href="copyManagement.html">Copy Management</a>
+                </li>
+                <li>
+                    <a href="calendar.html">Calendar</a>
+                </li>
+            </ul>
+        </nav>
+
+        <div id="content">
+            <nav class="navbar navbar-expand-lg navbar-light rounded-3 shadow-sm px-4">
+                <div class="container-fluid">
+                    <span class="navbar-brand mb-0 h1">Copy Management</span>
+                    <div class="d-flex align-items-center gap-3">
+                        <span id="nav-user-name" class="fw-semibold">Admin User</span>
+                        <span id="nav-role-badge" class="badge bg-primary">LIBRARIAN</span>
+                        <button id="logout-btn" class="btn btn-outline-danger btn-sm">Logout</button>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="container-fluid">
+                <div class="card shadow-sm p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold m-0">Physical Copies Inventory</h5>
+                        <button class="btn btn-primary fw-bold" id="save-changes-btn">Save Changes</button>
+                    </div>
+                    
+                    <div id="copies-container">
+                        <!-- JS Injected Copy Lists -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="js/api.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/notifications.js"></script>
+    <script type="module" src="js/copyManagement.js"></script>
+</body>
+</html>
