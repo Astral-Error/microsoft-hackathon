@@ -2,8 +2,10 @@ package com.example.libraryms.controller;
 
 import com.example.libraryms.dto.BorrowRequestForm;
 import com.example.libraryms.service.LibraryService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,20 +21,36 @@ public class LibraryController {
         this.libraryService = libraryService;
     }
 
+    @ModelAttribute("requestForm")
+    public BorrowRequestForm requestForm() {
+        return new BorrowRequestForm();
+    }
+
+    @ModelAttribute("currentUser")
+    public CurrentUser currentUser() {
+        return new CurrentUser("Demo Librarian", "Admin");
+    }
+
     @GetMapping({"/", "/dashboard"})
     public String dashboard(Model model) {
         model.addAttribute("dashboard", libraryService.getDashboard());
-        model.addAttribute("requestForm", new BorrowRequestForm());
         return "index";
     }
 
     @PostMapping("/requests")
-    public String createRequest(@ModelAttribute BorrowRequestForm form, RedirectAttributes redirectAttributes) {
+    public String createRequest(@Valid @ModelAttribute("requestForm") BorrowRequestForm form,
+            BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("dashboard", libraryService.getDashboard());
+            return "index";
+        }
         try {
             libraryService.submitBorrowingRequest(form);
             redirectAttributes.addFlashAttribute("successMessage", "Borrowing request submitted successfully.");
         } catch (IllegalArgumentException ex) {
-            redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+            bindingResult.reject("borrowRequest", ex.getMessage());
+            model.addAttribute("dashboard", libraryService.getDashboard());
+            return "index";
         }
         return "redirect:/dashboard";
     }
@@ -101,5 +119,8 @@ public class LibraryController {
             redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
         }
         return "redirect:/dashboard";
+    }
+
+    public record CurrentUser(String displayName, String role) {
     }
 }

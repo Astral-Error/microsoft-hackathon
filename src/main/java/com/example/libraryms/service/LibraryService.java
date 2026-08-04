@@ -46,7 +46,8 @@ public class LibraryService {
         issueInitialCopy(1L, "CC-1", LocalDate.of(2026, 7, 20), LocalDate.of(2026, 8, 4), "Issued to student batch A");
         issueInitialCopy(1L, "CC-2", LocalDate.of(2026, 7, 18), LocalDate.of(2026, 8, 4), "Issued to student batch B");
         reserveInitialCopy(2L, "ALG-1", LocalDate.of(2026, 8, 4), LocalDate.of(2026, 8, 8), "Reserved for placement prep");
-        markCopyUnavailable(3L, "DP-1", "Damaged and awaiting repair");
+        markCopyCondition(3L, "DP-1", CopyCondition.REPAIR, "Damaged and awaiting repair");
+        markCopyCondition(4L, "DB-1", CopyCondition.REFERENCE_ONLY, "Reference-only in the reading room");
         issueInitialCopy(5L, "AI-1", LocalDate.of(2026, 7, 25), LocalDate.of(2026, 8, 4), "Issued to project team");
         reserveInitialCopy(5L, "AI-2", LocalDate.of(2026, 8, 6), LocalDate.of(2026, 8, 7), "Reserved for research use");
     }
@@ -234,17 +235,19 @@ public class LibraryService {
         String activity = activeRequest.map(request -> request.getStatus().name() + " " + request.getStartDate() + " to "
                 + request.getExpectedReturnDate()).orElse("No active commitment today");
 
-        return new CopyView(copy.getCopyCode(), copy.getCondition(), copy.getConditionNote(), activity,
-                copy.getCondition() == CopyCondition.AVAILABLE && activeRequest.isEmpty());
+        return new CopyView(copy.getCopyCode(), copy.getCondition(), copyConditionLabel(copy.getCondition()),
+            copyConditionBadgeClass(copy.getCondition()), copy.getConditionNote(), activity,
+            copy.getCondition() == CopyCondition.AVAILABLE && activeRequest.isEmpty());
     }
 
     private RequestView toRequestView(BorrowRequest request) {
         BookTitle title = title(request.getTitleId());
         return new RequestView(request.getId(), request.getMemberId(), request.getMemberName(), title.getTitle(),
-                request.getCopyCode(), request.getStartDate(), request.getExpectedReturnDate(), request.getReason(),
-                request.getStatus(), request.getReviewNote(), request.getStatus() == RequestStatus.REQUESTED,
-                request.getStatus() == RequestStatus.REQUESTED, request.getStatus() == RequestStatus.APPROVED_RESERVED,
-                request.getStatus() == RequestStatus.APPROVED_RESERVED, request.getStatus() == RequestStatus.ISSUED,
+            request.getCopyCode(), request.getStartDate(), request.getExpectedReturnDate(), request.getReason(),
+            request.getStatus(), requestStatusLabel(request.getStatus()), requestStatusBadgeClass(request.getStatus()),
+            request.getReviewNote(), request.getStatus() == RequestStatus.REQUESTED,
+            request.getStatus() == RequestStatus.REQUESTED, request.getStatus() == RequestStatus.APPROVED_RESERVED,
+            request.getStatus() == RequestStatus.APPROVED_RESERVED, request.getStatus() == RequestStatus.ISSUED,
                 request.getStatus() == RequestStatus.ISSUED);
     }
 
@@ -274,10 +277,50 @@ public class LibraryService {
         requests.put(request.getId(), request);
     }
 
-    private void markCopyUnavailable(Long titleId, String copyCode, String note) {
+    private void markCopyCondition(Long titleId, String copyCode, CopyCondition condition, String note) {
         BookCopy copy = copyForTitle(titleId, copyCode);
-        copy.setCondition(CopyCondition.UNAVAILABLE);
+        copy.setCondition(condition);
         copy.setConditionNote(note);
+    }
+
+    private String copyConditionLabel(CopyCondition condition) {
+        return switch (condition) {
+            case AVAILABLE -> "Available";
+            case REPAIR -> "Repair";
+            case REFERENCE_ONLY -> "Reference only";
+            case UNAVAILABLE -> "Unavailable";
+        };
+    }
+
+    private String copyConditionBadgeClass(CopyCondition condition) {
+        return switch (condition) {
+            case AVAILABLE -> "bg-success";
+            case REPAIR -> "bg-purple";
+            case REFERENCE_ONLY -> "bg-brown";
+            case UNAVAILABLE -> "bg-secondary";
+        };
+    }
+
+    private String requestStatusLabel(RequestStatus status) {
+        return switch (status) {
+            case REQUESTED -> "Pending review";
+            case APPROVED_RESERVED -> "Confirmed reservation";
+            case ISSUED -> "Issued";
+            case REJECTED -> "Rejected";
+            case CANCELLED -> "Cancelled";
+            case RETURNED -> "Returned";
+        };
+    }
+
+    private String requestStatusBadgeClass(RequestStatus status) {
+        return switch (status) {
+            case REQUESTED -> "bg-warning text-dark";
+            case APPROVED_RESERVED -> "bg-info text-dark";
+            case ISSUED -> "bg-success";
+            case REJECTED -> "bg-danger";
+            case CANCELLED -> "bg-secondary";
+            case RETURNED -> "bg-dark";
+        };
     }
 
     private BookCopy copyForTitle(Long titleId, String copyCode) {
@@ -299,13 +342,13 @@ public class LibraryService {
     public record TitleView(BookTitle title, List<CopyView> copies, long availableNow) {
     }
 
-    public record CopyView(String copyCode, CopyCondition condition, String conditionNote, String activity,
-            boolean availableNow) {
+        public record CopyView(String copyCode, CopyCondition condition, String conditionLabel, String conditionBadgeClass,
+            String conditionNote, String activity, boolean availableNow) {
     }
 
     public record RequestView(Long id, String memberId, String memberName, String title, String copyCode,
-            LocalDate startDate, LocalDate expectedReturnDate, String reason, RequestStatus status, String reviewNote,
-            boolean canApprove, boolean canReject, boolean canIssue, boolean canCancel, boolean canReturn,
-            boolean canReturnUnavailable) {
+            LocalDate startDate, LocalDate expectedReturnDate, String reason, RequestStatus status, String statusLabel,
+            String statusBadgeClass, String reviewNote, boolean canApprove, boolean canReject, boolean canIssue,
+            boolean canCancel, boolean canReturn, boolean canReturnUnavailable) {
     }
 }

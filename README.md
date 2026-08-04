@@ -8,6 +8,8 @@ A Spring Boot + Gradle prototype for the VIT Hackathon library scenario. It demo
 - issuing an approved reservation as a loan
 - cancellation and rejection releasing the copy
 - return handling, including the option to mark a copy unavailable during return
+- Bootstrap-based dashboard UI with toast notifications, confirmation modals, and field-level form validation
+- demo librarian identity and role badge to keep the single-page prototype cohesive without full authentication
 
 ## Tech Stack
 
@@ -44,18 +46,21 @@ http://localhost:8080
 - Review approval creates a confirmed reservation. Issue is a separate action.
 - A rejected or cancelled request fully releases the copy.
 - Returning a book normally releases the copy; if marked unavailable during return, the copy remains unavailable.
+- Copy conditions include available, repair, reference-only, and unavailable states for UI and validation coverage.
 
 ## Scope
 
 Implemented:
 
 - request creation
+- field-level form validation
 - review approval/rejection
 - issue
 - cancellation
 - return
 - seeded data for the prompt
 - dashboard metrics and copy status cards
+- Bootstrap 5 UI with toasts, modals, status badges, and modern form controls
 
 Excluded:
 
