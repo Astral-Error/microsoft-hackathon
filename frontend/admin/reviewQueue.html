@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Queue - Libraria</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3 class="text-primary fw-bold m-0">Libraria</h3>
+            </div>
+            <ul class="list-unstyled components">
+                <li>
+                    <a href="adminDashboard.html">Dashboard</a>
+                </li>
+                <li class="active">
+                    <a href="reviewQueue.html">Review Queue</a>
+                </li>
+                <li>
+                    <a href="copyManagement.html">Copy Management</a>
+                </li>
+                <li>
+                    <a href="calendar.html">Calendar</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Page Content -->
+        <div id="content">
+            <nav class="navbar navbar-expand-lg navbar-light rounded-3 shadow-sm px-4">
+                <div class="container-fluid">
+                    <span class="navbar-brand mb-0 h1">Review Queue</span>
+                    <div class="d-flex align-items-center gap-3">
+                        <span id="nav-user-name" class="fw-semibold">Admin User</span>
+                        <span id="nav-role-badge" class="badge bg-primary">LIBRARIAN</span>
+                        <button id="logout-btn" class="btn btn-outline-danger btn-sm">Logout</button>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="container-fluid">
+                <div class="card shadow-sm p-4">
+                    <h5 class="fw-bold mb-4">Pending Requests & Active Loans</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Book & Member</th>
+                                    <th>Dates</th>
+                                    <th>Status</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="queue-table-body">
+                                <!-- JS Injected -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reject Reason Modal -->
+    <div class="modal fade" id="rejectModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">Reject Request</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted">Please provide a reason for rejecting this request.</p>
+                    <input type="hidden" id="reject-req-id">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="reject-reason" placeholder="Reason" required>
+                        <label for="reject-reason">Reason (Required)</label>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger fw-bold" id="confirm-reject-btn">Confirm Reject</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Return Book Modal -->
+    <div class="modal fade" id="returnModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">Return Book</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted">Update the physical condition of the copy upon return.</p>
+                    <input type="hidden" id="return-req-id">
+                    <input type="hidden" id="return-copy-id">
+                    <div class="form-floating mb-3">
+                        <select class="form-select" id="return-condition">
+                            <option value="AVAILABLE" selected>Available (Good Condition)</option>
+                            <option value="DAMAGED">Damaged</option>
+                            <option value="REPAIR">Under Repair</option>
+                            <option value="REFERENCE_ONLY">Reference Only</option>
+                            <option value="LOST">Lost</option>
+                        </select>
+                        <label for="return-condition">Condition</label>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary fw-bold" id="confirm-return-btn">Process Return</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="js/api.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/notifications.js"></script>
+    <script type="module" src="js/reviewQueue.js"></script>
+</body>
+</html>

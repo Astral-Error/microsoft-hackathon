@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar - Libraria</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="wrapper">
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3 class="text-primary fw-bold m-0">Libraria</h3>
+            </div>
+            <ul class="list-unstyled components">
+                <li>
+                    <a href="adminDashboard.html">Dashboard</a>
+                </li>
+                <li>
+                    <a href="reviewQueue.html">Review Queue</a>
+                </li>
+                <li>
+                    <a href="copyManagement.html">Copy Management</a>
+                </li>
+                <li class="active">
+                    <a href="calendar.html">Calendar</a>
+                </li>
+            </ul>
+        </nav>
+
+        <div id="content">
+            <nav class="navbar navbar-expand-lg navbar-light rounded-3 shadow-sm px-4">
+                <div class="container-fluid">
+                    <span class="navbar-brand mb-0 h1">Calendar</span>
+                    <div class="d-flex align-items-center gap-3">
+                        <span id="nav-user-name" class="fw-semibold">Admin User</span>
+                        <span id="nav-role-badge" class="badge bg-primary">LIBRARIAN</span>
+                        <button id="logout-btn" class="btn btn-outline-danger btn-sm">Logout</button>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="container-fluid">
+                <div class="card shadow-sm p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <button class="btn btn-outline-secondary btn-sm" id="prev-month">&lt;</button>
+                            <h5 class="fw-bold m-0" id="current-month-label">August 2026</h5>
+                            <button class="btn btn-outline-secondary btn-sm" id="next-month">&gt;</button>
+                        </div>
+                        <div class="d-flex gap-3">
+                            <span class="badge bg-success"><i class="bi bi-circle-fill"></i> Issue Date</span>
+                            <span class="badge bg-danger"><i class="bi bi-circle-fill"></i> Due Date</span>
+                        </div>
+                    </div>
+                    
+                    <div id="calendar-container">
+                        <!-- JS Calendar injected here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Details Modal -->
+    <div class="modal fade" id="eventModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold" id="event-modal-title">Event Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-borderless">
+                        <tbody>
+                            <tr><th class="ps-0" style="width: 30%">Book Title</th><td id="event-book"></td></tr>
+                            <tr><th class="ps-0">Copy ID</th><td id="event-copy"></td></tr>
+                            <tr><th class="ps-0">Member</th><td id="event-member"></td></tr>
+                            <tr><th class="ps-0">Issue Date</th><td id="event-start"></td></tr>
+                            <tr><th class="ps-0">Due Date</th><td id="event-end"></td></tr>
+                            <tr><th class="ps-0">Current Status</th><td><span id="event-status" class="badge"></span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="js/api.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/calendar.js"></script>
+</body>
+</html>

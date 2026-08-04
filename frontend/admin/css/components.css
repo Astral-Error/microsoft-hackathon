@@ -1,0 +1,74 @@
+/* components.css - Reusable UI Components */
+
+/* Cards */
+.card {
+    border: none !important;
+    border-radius: 8px !important;
+}
+
+.card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Modals */
+.modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.modal-backdrop {
+    backdrop-filter: blur(2px);
+}
+
+/* Toast Container custom placement */
+.toast-container {
+    z-index: 1055;
+}
+
+/* Status Badges */
+.badge-status {
+    font-weight: 600;
+    padding: 0.4em 0.8em;
+}
+
+/* Calendar Styles */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    text-align: center;
+}
+.calendar-day-header {
+    font-weight: 600;
+    color: #6c757d;
+    padding-bottom: 10px;
+}
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    font-weight: 500;
+    position: relative;
+    border: 1px solid transparent;
+}
+.calendar-day:hover {
+    border-color: #dee2e6;
+    background: #f8fafc;
+}
+.calendar-day.empty {
+    cursor: default;
+}
+.calendar-day.empty:hover {
+    background: transparent;
+    border-color: transparent;
+}
+.cal-event-issue { background: #198754; color: white; }
+.cal-event-return { background: #dc3545; color: white; }
+.cal-event-issue:hover { background: #157347; color: white; }
+.cal-event-return:hover { background: #bb2d3b; color: white; }
